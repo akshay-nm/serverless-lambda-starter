@@ -1,0 +1,49 @@
+service: sls
+
+frameworkVersion: '2'
+
+useDotenv: true
+
+package:
+  individually: true
+
+plugins:
+  - serverless-bundle # Package our functions with Webpack
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-east-1
+  lambdaHashingVersion: 20201221
+  # environment:
+  #   MONGODB_URL: ${env:MONGODB_URL}
+  #   JWT_SECRET: ${env:JWT_SECRET}
+  #   JWT_ISSUER: ${env:JWT_ISSUER}
+  #   JWT_AUDIENCE: ${env:JWT_AUDIENCE}
+  # apiGateway:
+  #   restApiId:
+  #     'Fn::ImportValue': ${self:custom.stage, 'dev'}-ApiGatewayRestApiId
+  #   restApiRootResourceId:
+  #     'Fn::ImportValue': ${self:custom.stage, 'dev'}-ApiGatewayRestApiRootResourceId
+
+functions:
+  main:
+    handler: handler.handle
+    events:
+      - http:
+          path: /sessions
+          method: post
+          cors:
+            true
+            # origin:
+            #   - 'origin1'
+            #   - 'origin2'
+            # headers: # <-- Specify allowed headers
+            #   - Content-Type
+            #   - X-Amz-Date
+            #   - Authorization
+            #   - X-Api-Key
+            #   - X-Amz-Security-Token
+            #   - X-Amz-User-Agent
+            # allowCredentials: false
